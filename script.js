@@ -20,6 +20,16 @@ let asteroidtwo2X;
 let asteroidtwo2Y;
 let asteroidtwo3X;
 let asteroidtwo3Y;
+let laseroneW = 140
+let laseroneH = 50
+let laseroneW2 = 140
+let laseroneH2 = 50
+let timerValue = 30
+let timerValue2 = 30
+let timerx = 550
+let timery = 75
+let timerx2 = 550
+let timery2 = 490
 let playeronepuzzle = 0
 let playeroneletter1 = 'D'
 let playeroneletter2 = 'O'
@@ -35,18 +45,24 @@ let playertwoletter3 = 'T'
 let playertwoword1 = '-'
 let playertwoword2 = '-'
 let playertwoword3 = '-'
+let pausedgame = false
 let playertwosolvestate = 0
 
+// Loads Assets
 function preload(){
   startscreen = loadImage('Photos/galaxy.jpg')
   backdrop = loadImage('Photos/outerspace.jpg')
-  ship1 = loadImage('spaceship1.png')
-  troid = loadImage('astroidR.png')
-  
+  laser = loadImage('Photos/laser.png')
+  laser2 = loadImage('Photos/laser2.png')
+  ship1 = loadImage('Photos/spaceship1.png')
+  ship2 = loadImage('Photos/spaceship2.png')
+  troid = loadImage('Photos/astroidR.png')
+  mainfont = loadFont('mainfont.otf')
 }
-
+// Setsup Game
 function setup() {
   frameRate(60);
+  textFont('mainfont')
   createCanvas(screenwidth, screenheight);
   asteroidone1X = random(140, 400)
   asteroidone1Y = random(125, 300)
@@ -61,8 +77,9 @@ function setup() {
   asteroidtwo3X = random(700, 1100)
   asteroidtwo3Y = random(425, 775)
 }
-
+// Pause Menu + Functon Declaration
 function draw() {
+  if(pausedgame == false){
   clear();
   mainmenu();
   levelsetup();
@@ -74,16 +91,21 @@ function draw() {
   lasertwo();
   puzzleone();
   puzzletwo();
+  timer();
+  timertwo();
+  }
+  pausemenu();
 }
-
+// Start Menu
 function mainmenu(){
   if(stage == 0){
   image(startscreen, 0, 0, screenwidth, screenheight)
     fill('#00c5d4')
     rect(75, 250, 150, 75)
     fill('black')
-    textSize(40)
-    text('START!', 80, 300)
+    textSize(60)
+    stroke('black')
+    text('START!', 85, 295)
   }
   if(mouseX > 75 && mouseX < 75 + 150 && mouseY > 250 && mouseY < 250 + 75 && stage == 0 && mouseIsPressed == true){
     stage = stage + 1
@@ -97,96 +119,15 @@ function levelsetup(){
     stroke('white')
     strokeWeight(10);
     line(0, dividerY, 1920, 400)
-    // Draws Player One
-    if(playerstate >= 1)
-      strokeWeight(4);
-    rect(p1X, p1Y, 100, 36)
-    rect(p2X, p2Y, 100, 36)
-  }
 }
-// Player One
-function playerone(){
-    // Player Ones Movement
-      if (keyIsDown(87)) {
-    p1Y = p1Y - playermovespeed;
-  } else if (keyIsDown(83)) {
-    p1Y = p1Y + playermovespeed;
-  }
-  if (keyIsDown(65)) {
-    p1X = p1X - playermovespeed;
-  } else if (keyIsDown(68)) {
-    p1X = p1X + playermovespeed;
-  }
-  // Player Ones Collisions
-  if(p1Y > dividerY - 30.00000001){
-    p1Y = p1Y - 10
-  }
-  if(p1Y < 0){
-    p1Y = p1Y + 10
-  }
-  if(p1X < 0){
-    p1X = p1X + 10
-  }
-  if(p1X > screenwidth - 100){
-    p1X = p1X - 10
-  }
-  
-}
-// Player Two
- function playertwo(){
-    if (keyIsDown(73)) {
-    p2Y = p2Y - playermovespeed;
-  } else if (keyIsDown(75)) {
-    p2Y = p2Y + playermovespeed;
-  }
-  if (keyIsDown(74)) {
-    p2X = p2X - playermovespeed;
-  } else if (keyIsDown(76)) {
-    p2X = p2X + playermovespeed;
- }
-   // Player Twos Collisions
-  if(p2Y < dividerY + 1){
-    p2Y = p2Y + 10
-  }
-  if(p2Y > screenheight - 36){
-    p2Y = p2Y - 10
-  }
-  if(p2X < 0){
-    p2X = p2X + 10
-  }
-  if(p2X > screenwidth - 100){
-    p2X = p2X - 10
-  }
-
- }
-// Player Ones Asteroids
-function asteroidsone(){
-  if(playerstate >= 1){
-    circle(asteroidone1X, asteroidone1Y, 50)
-    image(troid, asteroidone1X-40, asteroidone1Y-40, 80, 80)
-    circle(asteroidone2X, asteroidone2Y, 50)
-    image(troid, asteroidone2X-40, asteroidone2Y-40, 80, 80)
-    circle(asteroidone3X, asteroidone3Y, 50)
-    image(troid, asteroidone3X-40, asteroidone3Y-40, 80, 80)
-  }
-}
-// Player Ones Asteroids
-function asteroidstwo(){
-  if(playerstate >= 1){
-    circle(asteroidtwo1X, asteroidtwo1Y, 50)
-    image(troid, asteroidtwo1X-40, asteroidtwo1Y-40, 80, 80)
-    circle(asteroidtwo2X, asteroidtwo2Y, 50)
-    image(troid, asteroidtwo2X-40, asteroidtwo2Y-40, 80, 80)
-    circle(asteroidtwo3X, asteroidtwo3Y, 50)
-    image(troid, asteroidtwo3X-40, asteroidtwo3Y-40, 80, 80)
-  }
 }
 // Player Ones Laser
 function laserone(){
   if(playerstate >= 1 && keyIsDown(70)){
     push();
     fill(255,255,255,50);
-    rect(p1X + 100, p1Y, 150, 36)
+  //rect(p1X + 120, p1Y+14, laseroneW, laseroneH)
+     image(laser, p1X + 100, p1Y - 5, laseroneW, laseroneH)
     pop();
   }
   else{
@@ -198,8 +139,8 @@ function laserone(){
 function lasertwo(){
   if(playerstate >= 1 && keyIsDown(72)){
     push();
-    fill(255,255,255,50);
-    rect(p2X + 100, p2Y, 150, 36)
+     // rect(p2X + 120, p2Y+14, 130, 10)
+     image(laser2, p2X + 100, p2Y - 5, laseroneW2, laseroneH2)
     pop();
   }
   else{
@@ -207,8 +148,46 @@ function lasertwo(){
   }
     
 }
+// Player One Timer
+function timer(){
+  if(playerstate >= 1){
+strokeWeight(4);
+ textSize(50)
+  if (timerValue >= 10) {
+    text("" + timerValue, timerx, timery);
+  }
+  if (timerValue < 10) {
+    text('0' + timerValue, timerx, timery);
+  } 
+  if (frameCount % 60 == 0 && timerValue > 0){
+    timerValue--;
+  }
+    if (timerValue == 0){
+    text ("You lose!", 550, 150)
+}
+}
+}
+// Player Two Timer
+function timertwo(){
+  if(playerstate >= 1){
+ textSize(50)
+  if (timerValue2 >= 10) {
+    text("" + timerValue2, timerx2, timery2);
+  }
+  if (timerValue2 < 10) {
+    text('0' + timerValue2, timerx2, timery2);
+  } 
+  if (frameCount % 60 == 0 && timerValue2 > 0){
+    timerValue2 = timerValue2 - 1
+  }
+     if (timerValue2 == 0){
+    text ("You lose!", 550, 560)
+}
+}
+}
 // Player Ones Puzzle
 function puzzleone(){
+    strokeWeight(4);
   if(playeronesolvestate < 1){
     playeroneword1 = '-'
      playeroneword2 = '-'
@@ -237,7 +216,7 @@ function puzzleone(){
   
   if(playerstate >= 1){
     textAlign(CENTER)
-    textSize(30)
+    textSize(25)
   text(playeroneletter1, asteroidone2X + 1, asteroidone2Y + 10)
   text(playeroneletter2, asteroidone3X, asteroidone3Y + 10)
   text(playeroneletter3, asteroidone1X, asteroidone1Y + 10)
@@ -260,6 +239,7 @@ function puzzleone(){
       playeroneword3 = playeroneletter3
       playeronepuzzle = playeronepuzzle + 1
       playeronesolvestate = 0
+       timerValue = timerValue + 5
     }
     if(playeronepuzzle >= 0 && playeronepuzzle <= 1 && asteroidone1X >= 10000){
   asteroidone2X = random(140, 400)
@@ -283,30 +263,77 @@ function puzzleone(){
 }
 // Player Twos Puzzle
 function puzzletwo(){
+    strokeWeight(4);
+   if(playertwosolvestate < 1){
+    playertwoword1 = '-'
+     playertwoword2 = '-'
+     playertwoword3 = '-'
+  }
+  if(playertwopuzzle == 0){
+      playertwoletter1 = 'C'
+      playertwoletter2 = 'A'
+      playertwoletter3 = 'T'
+  }
+  if(playertwopuzzle == 1){
+      playertwoletter1 = 'C'
+      playertwoletter2 = 'O'
+      playertwoletter3 = 'P'
+  }
   if(playerstate >= 1){
     textAlign(CENTER)
-    textSize(30)
-  text('C', asteroidtwo3X + 1, asteroidtwo3Y + 10)
-  text('A', asteroidtwo1X, asteroidtwo1Y + 10)
-  text('T', asteroidtwo2X, asteroidtwo2Y + 10)
+    textSize(25)
+  text( playertwoletter1, asteroidtwo3X + 1, asteroidtwo3Y + 10)
+  text( playertwoletter2, asteroidtwo1X, asteroidtwo1Y + 10)
+  text( playertwoletter3, asteroidtwo2X, asteroidtwo2Y + 10)
   textSize(50)
   text(playertwoword1, 500, 770)
   text(playertwoword2, 550, 770)
   text(playertwoword3, 600, 770)
      if(p2X + 250 > asteroidtwo3X && p2X < asteroidtwo3X && p2Y < asteroidtwo3Y && p2Y + 36 > asteroidtwo3Y && keyIsDown(72) && playertwosolvestate == 0){
       asteroidtwo3X = 100000
-      playertwoword1 = ('C')
+      playertwoword1 =  playertwoletter1
       playertwosolvestate = 1
      }
        if(p2X + 250 > asteroidtwo1X && p2X < asteroidtwo1X && p2Y < asteroidtwo1Y && p2Y + 36 > asteroidtwo1Y && keyIsDown(72) && playertwosolvestate == 1){
       asteroidtwo1X = 100000
-      playertwoword2 = ('A')
+      playertwoword2 =  playertwoletter2
       playertwosolvestate = 2
     }
     if(p2X + 250 > asteroidtwo2X && p2X < asteroidtwo2X && p2Y < asteroidtwo2Y && p2Y + 36 > asteroidtwo2Y && keyIsDown(72) && playertwosolvestate == 2){
       asteroidtwo2X = 100000
-      playertwoword3 = ('T')
-      playertwosolvestate = 3
+      playertwoword3 =  playertwoletter3
+      playertwopuzzle = playertwopuzzle + 1
+      playertwosolvestate = 0
+      timerValue2 = timerValue2 + 5
     }
+  }
+  if(playertwopuzzle >= 0 && playertwopuzzle <= 1 && asteroidtwo2X >= 10000 && playertwosolvestate == 0){
+  asteroidtwo3X = random(140, 400)
+  asteroidtwo3Y = random(425, 775)
+  asteroidtwo1X = random(400, 700)
+  asteroidtwo1Y = random(425, 775)
+  asteroidtwo2X = random(700, 1100)
+  asteroidtwo2Y = random(425, 775)
+  }
+}
+//Pauses Game
+function keyPressed(){
+  if(keyCode == 27 && stage != 0){
+      pausedgame = !pausedgame
+  }
+}
+// Pause Menu
+function pausemenu(){
+  if(pausedgame == true){
+    push();
+    fill('grey')
+    rect(0, 0, screenwidth, screenheight)
+    pop();
+    textSize(60)
+    text('PAUSED', screenwidth/2, screenheight/2)
+     textSize(40)
+    text('MAIN MENU (WIP)', screenwidth/2, screenheight/2 + 100)
+    textSize(20)
+    text('(ESC TO UNPAUSE)', screenwidth/2, screenheight/2 + 25)
   }
 }
