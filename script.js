@@ -20,8 +20,8 @@ let asteroidtwo2X;
 let asteroidtwo2Y;
 let asteroidtwo3X;
 let asteroidtwo3Y;
-let laseroneW = 140
-let laseroneH = 50
+let laseroneW = 600
+let laseroneH = 450
 let laseroneW2 = 140
 let laseroneH2 = 50
 let timerValue = 30
@@ -57,7 +57,7 @@ function preload(){
   ship1 = loadImage('Photos/spaceship1.png')
   ship2 = loadImage('Photos/spaceship2.png')
   troid = loadImage('Photos/astroidR.png')
-  mainfont = loadFont('mainfont.otf')
+  mainfont = loadFont('mainfont.ttf')
 }
 // Setsup Game
 function setup() {
@@ -103,9 +103,11 @@ function mainmenu(){
     fill('#00c5d4')
     rect(75, 250, 150, 75)
     fill('black')
-    textSize(60)
-    stroke('black')
-    text('START!', 85, 295)
+    push();
+    stroke('white')
+    textSize(24)
+    text('START!', 83, 298)
+    pop();
   }
   if(mouseX > 75 && mouseX < 75 + 150 && mouseY > 250 && mouseY < 250 + 75 && stage == 0 && mouseIsPressed == true){
     stage = stage + 1
@@ -127,7 +129,7 @@ function laserone(){
     push();
     fill(255,255,255,50);
   //rect(p1X + 120, p1Y+14, laseroneW, laseroneH)
-     image(laser, p1X + 100, p1Y - 5, laseroneW, laseroneH)
+     image(laser, p1X - 85, p1Y - 175, laseroneW, laseroneH)
     pop();
   }
   else{
@@ -164,6 +166,7 @@ strokeWeight(4);
   }
     if (timerValue == 0){
     text ("You lose!", 550, 150)
+      playermovespeed = 0
 }
 }
 }
